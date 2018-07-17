@@ -1,2 +1,2 @@
 # tensorflow_exercise
-Using Tensorflow to do exercise
+Using Tensorflow to do exercise.
