@@ -9,6 +9,8 @@ Using Tensorflow to do exercise.
 * 使用 Layer 方法建立3層hidden layer
 
 ## Simpson Classfication
+* Kaggle下載辛普森圖片集
+  * https://www.kaggle.com/alexattia/the-simpsons-characters-dataset
 * 分類辛普森家庭圖片
 * 使用簡單5層Dense建立神經網路
 * Note
