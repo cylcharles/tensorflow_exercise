@@ -6,10 +6,11 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from keras.preprocessing import image
+import matplotlib.pyplot as plt
 
 def loadImages():
 	imgs = []
-	rootdir = '(your image Folder)'
+	rootdir = 'your folder path'
 	lists = os.listdir(rootdir)
 	for item in lists:
 		path = os.path.join(rootdir,item)
@@ -17,7 +18,7 @@ def loadImages():
 			img = image.load_img(path, target_size=(200, 200))
 			x = image.img_to_array(img)
 			imgs.append(x.flatten())
-	return np.array(imgs)
+	return np.array(imgs) / 255
 
 x_train = loadImages()
 
@@ -62,6 +63,8 @@ with tf.compat.v1.variable_scope('output'):
 	w7 = tf.compat.v1.get_variable('weight7', shape = [200, x_train.shape[1]], dtype=tf.float32, initializer=tf.truncated_normal_initializer(stddev=0.1))
 	b7 = tf.compat.v1.get_variable('bias7', shape = [x_train.shape[1]], dtype=tf.float32, initializer=tf.constant_initializer(0.0))  
 	output = tf.add(tf.matmul(x_h6, w7), b7)
+	print(output)
+
 
 with tf.name_scope('cross_entropy'):
 	loss = tf.reduce_mean(tf.pow(x - output, 2))
@@ -73,22 +76,30 @@ with tf.name_scope('train'):
 
 batch_size = 4
 epochs = 50
-with tf.compat.v1.Session() as sess:
-    sess.run(tf.compat.v1.global_variables_initializer())
-    for step in range(epochs):
-        iterations = int(np.floor(len(x_train) / batch_size))
-        train_loss_collector = []
-        train_acc_collector = []
-        for j in np.arange(iterations):
-            batch_idx_start = j * batch_size
-            batch_idx_stop = (j+1) * batch_size
-            
-            x_batch = x_train[batch_idx_start : batch_idx_stop] 
-            y_batch = x_train[batch_idx_start : batch_idx_stop]
-            
-            _, c = sess.run([train_step, loss], feed_dict={x: x_batch})
 
-        print("Epoch:", step, "cost=", "{:.9f}".format(c))
-                      
-print('--- training done ---')
+with tf.compat.v1.Session() as sess:
+	sess.run(tf.compat.v1.global_variables_initializer())
+	for step in range(epochs):
+		iterations = int(np.floor(len(x_train) / batch_size))
+		train_loss_collector = []
+		train_acc_collector = []
+		for j in np.arange(iterations):
+			batch_idx_start = j * batch_size
+			batch_idx_stop = (j+1) * batch_size
+
+			x_batch = x_train[batch_idx_start : batch_idx_stop]
+			y_batch = x_train[batch_idx_start : batch_idx_stop]
+			_, c = sess.run([train_step, loss], feed_dict={x: x_batch})
+		print("Epoch:", step, "cost=", "{:.9f}".format(c))
+	print('--- training done ---')
+
+
+	encode_decode = sess.run(output, feed_dict={x: x_train[10:20]})
+	f, a = plt.subplots(2, 10, figsize=(10, 2))
+	for i in range(10):
+		a[0][i].imshow(np.reshape(x_train[i], (200, 200, 3)))
+		a[1][i].imshow(np.reshape(encode_decode[i], (200, 200, 3)))
+	plt.show()
+
+
 
