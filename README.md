@@ -33,3 +33,4 @@ Using Tensorflow to do exercise.
     * 觀察最後視覺化的結果，和只用5層Dense建立的神經網路比較，可看出Loss最終收斂接近於0，Accuracy最後也在接近1的地方，明顯比Dense的效果還要來得好
 
 ## Autoencoder
+* 使用 Layer 方法建立hidden layer
