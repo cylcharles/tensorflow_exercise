@@ -34,3 +34,4 @@ Using Tensorflow to do exercise.
 
 ## Autoencoder
 * 使用 Layer 方法建立hidden layer
+* 3層encoder，3層decoder

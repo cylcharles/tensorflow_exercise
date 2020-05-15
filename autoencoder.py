@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 def loadImages():
 	imgs = []
-	rootdir = 'your folder path'
+	rootdir = 'D:/resize_FP_Dataset'
 	lists = os.listdir(rootdir)
 	for item in lists:
 		path = os.path.join(rootdir,item)
@@ -75,14 +75,14 @@ with tf.name_scope('train'):
 # print(tf.compat.v1.global_variables())
 
 batch_size = 4
-epochs = 50
+epochs = 5
+tr_loss = list() #存training過程中的loss值
 
 with tf.compat.v1.Session() as sess:
 	sess.run(tf.compat.v1.global_variables_initializer())
+	training_loss = 0
 	for step in range(epochs):
-		iterations = int(np.floor(len(x_train) / batch_size))
-		train_loss_collector = []
-		train_acc_collector = []
+		iterations = int(np.floor(len(x_train) / batch_size))		
 		for j in np.arange(iterations):
 			batch_idx_start = j * batch_size
 			batch_idx_stop = (j+1) * batch_size
@@ -90,15 +90,26 @@ with tf.compat.v1.Session() as sess:
 			x_batch = x_train[batch_idx_start : batch_idx_stop]
 			y_batch = x_train[batch_idx_start : batch_idx_stop]
 			_, c = sess.run([train_step, loss], feed_dict={x: x_batch})
+
+			training_loss += c
+
+		training_loss /= epochs
+		tr_loss.append(training_loss)
+
 		print("Epoch:", step, "cost=", "{:.9f}".format(c))
+
 	print('--- training done ---')
 
+	plt.plot(range(len(tr_loss)), tr_loss, label='training')
+	plt.title('Loss')
+	plt.legend(loc='best')
 
 	encode_decode = sess.run(output, feed_dict={x: x_train[10:20]})
 	f, a = plt.subplots(2, 10, figsize=(10, 2))
 	for i in range(10):
 		a[0][i].imshow(np.reshape(x_train[i], (200, 200, 3)))
 		a[1][i].imshow(np.reshape(encode_decode[i], (200, 200, 3)))
+
 	plt.show()
 
 
