@@ -57,7 +57,7 @@ with tf.compat.v1.variable_scope('dencoder2'):
 with tf.compat.v1.variable_scope('dencoder3'):
 	w6 = tf.compat.v1.get_variable('weight6', shape = [100, 200], dtype=tf.float32, initializer=tf.truncated_normal_initializer(stddev=0.1))
 	b6 = tf.compat.v1.get_variable('bias6', shape = [200], dtype = tf.float32, initializer = tf.constant_initializer(0.0))  
-	x_h6 = tf.add(tf.matmul(x_h5, w6), b6)
+	x_h6 = tf.nn.relu(tf.add(tf.matmul(x_h5, w6), b6))
 
 with tf.compat.v1.variable_scope('output'):
 	w7 = tf.compat.v1.get_variable('weight7', shape = [200, x_train.shape[1]], dtype=tf.float32, initializer=tf.truncated_normal_initializer(stddev=0.1))
